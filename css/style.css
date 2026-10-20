@@ -57,12 +57,19 @@ header.bar {
 
 .main { min-height: 0; display: grid; grid-template-columns: 1fr 290px; }
 .mapwrap { position: relative; min-width: 0; min-height: 0; background: var(--sea); overflow: hidden; }
-#map { display: block; width: 100%; height: 100%; }
+#map { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+#map:active { cursor: grabbing; }
 .graticule { fill: none; stroke: var(--sea-line); stroke-width: 0.6; vector-effect: non-scaling-stroke; }
 .c { stroke: var(--border); stroke-width: 0.5; vector-effect: non-scaling-stroke; transition: fill .35s ease; stroke-linejoin: round; }
 .c.q { fill: var(--land); cursor: pointer; }
 .c.q:hover { fill: var(--land-hover); }
 .c.t { fill: var(--terr); }
+
+.zoomctl { position: absolute; right: calc(12px + env(safe-area-inset-right, 0px)); bottom: 12px; display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--panel-line); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / .12); }
+.zoomctl button { width: 36px; height: 34px; border: 0; background: none; font-size: 18px; line-height: 1; }
+.zoomctl button + button { border-top: 1px solid var(--panel-line); }
+.zoomctl button:hover { background: var(--panel); }
+.hint-strip { position: absolute; left: calc(12px + env(safe-area-inset-left, 0px)); bottom: 12px; font-size: 12px; color: var(--muted); background: color-mix(in srgb, var(--card) 85%, transparent); padding: 6px 10px; border-radius: 6px; pointer-events: none; }
 
 /* Ledger */
 aside.ledger { border-left: 1px solid var(--panel-line); overflow-y: auto; padding-block: 16px; padding-left: 16px; padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; align-content: start; min-width: 0; }

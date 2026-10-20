@@ -46,4 +46,20 @@
     o.anchor = path.centroid(best);
   }
 
+  // ---------- zoom ----------
+  let K = 1;
+  const zoom = d3.zoom().scaleExtent([1, 80]).translateExtent([[-40, -40], [W + 40, H + 40]])
+    .on("zoom", e => { world.attr("transform", e.transform); K = e.transform.k; rescale(); });
+  svg.call(zoom).on("dblclick.zoom", null);
+  const pxPerUnit = () => { const r = svg.node().getBoundingClientRect(); return Math.min(r.width / W, r.height / H) || 1; };
+  // keep dots, labels and hatching the same size on screen at every zoom level
+  function rescale() {
+    const u = pxPerUnit() * K;
+  }
+  window.addEventListener("resize", () => { rescale(); });
+  document.getElementById("zIn").onclick = () => svg.transition().duration(250).call(zoom.scaleBy, 1.8);
+  document.getElementById("zOut").onclick = () => svg.transition().duration(250).call(zoom.scaleBy, 1 / 1.8);
+  document.getElementById("zReset").onclick = () => svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity);
+  rescale();
+
 })();
