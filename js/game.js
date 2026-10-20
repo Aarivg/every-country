@@ -24,10 +24,14 @@
     .replace(/[^a-z]/g, "");
   const NAMES = {};
   for (const k of KEYS) NAMES[k] = [...new Set([Q[k].n, ...Q[k].a].map(norm))];
+  const exactOwner = {};
+  for (const k of KEYS) for (const n of NAMES[k]) exactOwner[n] = exactOwner[n] || k;
   function check(k, guess) {
     const g = norm(guess);
     if (!g) return { ok: false, empty: true };
     if (NAMES[k].includes(g)) return { ok: true };
+    const other = exactOwner[g];
+    if (other && other !== k) return { ok: false, other };
     return { ok: false };
   }
 
@@ -160,7 +164,8 @@
     if (r.ok) { setState(k, "f"); return; }
     S.m++; save(); updateStats();
     fb.className = "fb bad";
-    fb.textContent = "Not quite. Try again.";
+    fb.textContent = r.other ? (S.s[r.other] === "f" ? `You've already named ${Q[r.other].n}. Try again.` : `${Q[r.other].n} is somewhere else. Try again.`) : "Not quite. Try again.";
+    pop.classList.remove("shake"); void pop.offsetWidth; pop.classList.add("shake");
     inp.select();
   }
   function setState(k, st) {
