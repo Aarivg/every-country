@@ -12,7 +12,7 @@
   const STORE = "every-country-v1";
 
   // ---------- state ----------
-  let S = { s: {}, m: 0, t: 0 };
+  let S = { s: {}, m: 0, t: 0, order: [] };
   try { const raw = localStorage.getItem(STORE); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
   window.addEventListener("pagehide", save);
@@ -193,7 +193,7 @@
     inp.select();
   }
   function setState(k, st) {
-    S.s[k] = st;
+    S.s[k] = st; S.order = S.order.filter(x => x !== k); S.order.push(k);
     save(); paint(k); updateStats();
     if (st === "f") toast(`${Q[k].n} · ${namedCount()} of ${TOTAL}`);
     close();
@@ -225,10 +225,21 @@
   const revCount = () => KEYS.filter(k => S.s[k] === "r").length;
   const allDone = () => KEYS.every(k => S.s[k]);
   const fmt = ms => { const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
+  const contsEl = document.getElementById("conts");
+  contsEl.innerHTML = CONT.map(([c, v]) => `<div class="cont" style="--cf:var(${v})"><span>${c}</span><b data-c="${c}"></b><div class="track"><div class="fill" data-cf="${c}"></div></div></div>`).join("");
   function updateStats() {
     document.getElementById("sNamed").innerHTML = `${namedCount()}<small> / ${TOTAL}</small>`;
     document.getElementById("sRev").textContent = revCount();
     document.getElementById("sMiss").textContent = S.m;
+    for (const [c] of CONT) {
+      const ks = KEYS.filter(k => Q[k].c === c), n = ks.filter(k => S.s[k] === "f").length;
+      contsEl.querySelector(`[data-c="${c}"]`).textContent = `${n} / ${ks.length}`;
+      contsEl.querySelector(`[data-cf="${c}"]`).style.width = (100 * n / ks.length) + "%";
+    }
+    const rec = S.order.slice(-12).reverse();
+    document.getElementById("recent").innerHTML = rec.length
+      ? rec.map(k => `<li class="${S.s[k] === "r" ? "rv" : ""}" style="--cf:var(${CVAR[Q[k].c]})"><i></i>${Q[k].n}</li>`).join("")
+      : `<li class="empty">Nothing yet. Click any country on the map to start.</li>`;
   }
   // ---------- timer ----------
   function startClock() { running = true; tick0 = Date.now() - S.t; }
