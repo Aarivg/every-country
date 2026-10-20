@@ -84,8 +84,12 @@ header.bar {
 .pop input { flex: 1; min-width: 0; font: 500 16px var(--f-body); padding: 9px 10px; border: 1.5px solid var(--panel-line); border-radius: 7px; background: var(--panel); color: var(--ink); }
 .pop input:focus { border-color: var(--ink); outline: none; }
 .pop .go { border: 0; border-radius: 7px; padding: 0 14px; font-weight: 600; background: var(--ink); color: var(--card); }
+.pop .row { display: flex; gap: 8px; align-items: center; }
+.pop .ghost { border: 1px solid var(--panel-line); background: none; border-radius: 6px; padding: 5px 10px; font-size: 12.5px; color: var(--muted); }
+.pop .ghost:hover { color: var(--ink); border-color: var(--muted); }
 .pop .fb { font-size: 13px; min-height: 18px; color: var(--muted); }
 .pop .fb.bad { color: var(--bad); }
+.pop .pattern { font-family: var(--f-mono); font-size: 15px; letter-spacing: 0.12em; }
 .pop .answer { font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 1.15; }
 
 /* Ledger */

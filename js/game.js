@@ -105,13 +105,13 @@
 
   // ---------- naming card ----------
   const pop = document.getElementById("pop");
-  let selKey = null;
+  let selKey = null, hintN = 0;
   svg.on("click", e => {
     const k = e.target.dataset && e.target.dataset.k;
     if (k) open(k); else close();
   });
   function open(k) {
-    const prev = selKey; selKey = k;
+    const prev = selKey; selKey = k; hintN = 0;
     if (prev) paint(prev);
     paint(k);
     render();
@@ -124,6 +124,14 @@
     if (!selKey) return;
     const k = selKey; selKey = null; paint(k); pop.hidden = true;
   }
+  function pattern(name, n) {
+    // reveal first n letters, keep spaces/punctuation visible
+    let shown = 0;
+    return [...name].map(ch => {
+      if (!/\p{L}/u.test(ch)) return ch === " " ? " " : ch;
+      shown++; return shown <= n ? ch.toUpperCase() : "_";
+    }).join(" ");
+  }
   function render() {
     const k = selKey, q = Q[k], st = S.s[k];
     const cont = `<div class="eyebrow"><span>${st ? q.c : "Name this country"}</span><button class="close" aria-label="Close">✕</button></div>`;
@@ -132,9 +140,12 @@
     } else {
       pop.innerHTML = cont + `
         <form autocomplete="off"><input id="guess" type="text" placeholder="Type the country name" spellcheck="false" autocapitalize="words" enterkeyhint="go"><button class="go" type="submit">Name</button></form>
+        ${hintN ? `<div class="pattern">${pattern(q.n, hintN)}</div>` : ""}
         <div class="fb" id="fb"></div>
+        <div class="row"><button class="ghost" id="hintBtn" type="button">${hintN ? "Another letter" : "Hint"}</button></div>
         `;
       pop.querySelector("form").onsubmit = ev => { ev.preventDefault(); submit(); };
+      pop.querySelector("#hintBtn").onclick = () => { const v = pop.querySelector("input").value; hintN = Math.min(hintN + 1, q.n.replace(/[^\p{L}]/gu, "").length); render(); const i = pop.querySelector("input"); i.value = v; i.focus(); };
     }
     pop.querySelector(".close").onclick = close;
   }
