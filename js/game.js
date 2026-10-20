@@ -12,7 +12,7 @@
   const STORE = "every-country-v1";
 
   // ---------- state ----------
-  let S = { s: {}, m: 0, t: 0, order: [] };
+  let S = { s: {}, m: 0, t: 0, order: [], labels: true };
   try { const raw = localStorage.getItem(STORE); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
   window.addEventListener("pagehide", save);
@@ -70,7 +70,7 @@
   const wrap = document.getElementById("wrap");
   world.append("path").attr("class", "graticule").attr("d", path(d3.geoGraticule10()));
   const hatch = document.getElementById("hatch");
-  const gC = world.append("g"), gM = world.append("g");
+  const gC = world.append("g"), gM = world.append("g"), gL = world.append("g").attr("class", "labels");
 
   const byKey = {}; // k -> {els:[], marker, anchor}
   for (const f of feats) {
@@ -97,6 +97,9 @@
       const c = gM.append("circle").attr("class", "mk").attr("cx", o.anchor[0]).attr("cy", o.anchor[1]).attr("r", 3).node();
       c.dataset.k = k; o.marker = c;
     }
+    o.label = gL.append("text").attr("class", "lbl").attr("x", o.anchor[0]).attr("y", o.anchor[1]).attr("dy", "0.35em").text(Q[k].n).node();
+    o.label.style.display = "none";
+    o.labelArea = path.area(best);
   }
 
   // ---------- zoom ----------
@@ -113,6 +116,9 @@
     for (const k of KEYS) {
       const o = byKey[k];
       if (o.marker) o.marker.setAttribute("r", rr);
+      const show = S.labels && (S.s[k]) && (o.labelArea * u * u > 900 || (o.small && K >= 4) || (o.labelArea * u * u > 120 && K >= 3));
+      o.label.style.display = show ? "" : "none";
+      if (show) { o.label.style.fontSize = (11 / u) + "px"; o.label.style.strokeWidth = (3 / u) + "px"; o.label.setAttribute("y", o.anchor[1] + (o.small ? 12 / u : 0)); }
     }
   }
   window.addEventListener("resize", () => { rescale(); placePop(); });
@@ -194,7 +200,7 @@
   }
   function setState(k, st) {
     S.s[k] = st; S.order = S.order.filter(x => x !== k); S.order.push(k);
-    save(); paint(k); updateStats();
+    save(); paint(k); updateStats(); rescale();
     if (st === "f") toast(`${Q[k].n} · ${namedCount()} of ${TOTAL}`);
     close();
   }
@@ -248,5 +254,10 @@
     document.getElementById("sTime").textContent = fmt(S.t);
   }, 500);
 
-  KEYS.forEach(paint); updateStats();
+  // ---------- options ----------
+  const labelsBtn = document.getElementById("labelsBtn");
+  function syncLabels() { labelsBtn.textContent = S.labels ? "Hide names on map" : "Show names on map"; rescale(); }
+  labelsBtn.onclick = () => { S.labels = !S.labels; save(); syncLabels(); };
+
+  KEYS.forEach(paint); updateStats(); syncLabels();
 })();
