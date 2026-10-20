@@ -1,0 +1,72 @@
+/* Base reset */
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; -webkit-font-smoothing: antialiased; }
+[hidden] { display: none !important; }
+
+/* Layout: one-screen atlas — status strip on top, map as the working surface, ledger panel at right. */
+:root {
+  --sea: #d4e1e8;
+  --sea-line: #c3d3dc;
+  --land: #fbfbf8;
+  --land-hover: #ece9de;
+  --terr: #e6e8e4;
+  --border: #8f9ea8;
+  --ink: #17232b;
+  --muted: #5d6d77;
+  --panel: #f3f5f4;
+  --panel-line: #d8dfe2;
+  --card: #ffffff;
+  --sel: #ffcf4a;
+  --good: #1f8a5b;
+  --bad: #c23b2a;
+  --revealed: #a8a39a;
+  --spot: #f2619c;
+  --af: #e0913a; --as: #d4574e; --eu: #4a7fc1; --na: #3f9a6b; --sa: #9461b8; --oc: #2a9fa6;
+  --f-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --f-body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --sea: #0e1a21; --sea-line: #15252e; --land: #2a3740; --land-hover: #364650; --terr: #1f2b32;
+  --border: #546874; --ink: #e9eef0; --muted: #93a4ad; --panel: #131f26; --panel-line: #24343d; --card: #1a2830;
+  --sel: #f2c230; --good: #4cc48a; --bad: #ff7a66; --revealed: #6f6a62; --spot: #d9508c;
+  --af: #e39a4a; --as: #e06a60; --eu: #5f93d6; --na: #4fb07f; --sa: #a978cc; --oc: #3bb3ba;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --sea: #0e1a21; --sea-line: #15252e; --land: #2a3740; --land-hover: #364650; --terr: #1f2b32;
+  --border: #546874; --ink: #e9eef0; --muted: #93a4ad; --panel: #131f26; --panel-line: #24343d; --card: #1a2830;
+  --sel: #f2c230; --good: #4cc48a; --bad: #ff7a66; --revealed: #6f6a62; --spot: #d9508c;
+  --af: #e39a4a; --as: #e06a60; --eu: #5f93d6; --na: #4fb07f; --sa: #a978cc; --oc: #3bb3ba;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--panel); color: var(--ink); font-family: var(--f-body); font-size: 14px; }
+* { box-sizing: border-box; }
+button { font: inherit; color: inherit; cursor: pointer; }
+
+.app { height: 100%; display: grid; grid-template-rows: auto 1fr; }
+header.bar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px;
+  padding-block: 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--panel-line);
+}
+.brand { display: flex; align-items: baseline; gap: 10px; margin-right: auto; }
+.brand h1 { margin: 0; font-family: var(--f-display); font-weight: 800; font-size: 22px; letter-spacing: -0.01em; }
+.brand span { color: var(--muted); font-size: 13px; }
+
+.main { min-height: 0; display: grid; grid-template-columns: 1fr 290px; }
+.mapwrap { position: relative; min-width: 0; min-height: 0; background: var(--sea); overflow: hidden; }
+#map { display: block; width: 100%; height: 100%; }
+.graticule { fill: none; stroke: var(--sea-line); stroke-width: 0.6; vector-effect: non-scaling-stroke; }
+.c { stroke: var(--border); stroke-width: 0.5; vector-effect: non-scaling-stroke; transition: fill .35s ease; stroke-linejoin: round; }
+.c.q { fill: var(--land); cursor: pointer; }
+.c.q:hover { fill: var(--land-hover); }
+.c.t { fill: var(--terr); }
+
+/* Ledger */
+aside.ledger { border-left: 1px solid var(--panel-line); overflow-y: auto; padding-block: 16px; padding-left: 16px; padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; align-content: start; min-width: 0; }
+.ledger h2 { margin: 0 0 10px; font-family: var(--f-display); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.legend { display: grid; gap: 6px; font-size: 12.5px; color: var(--muted); }
+.legend div { display: flex; align-items: center; gap: 8px; }
+.legend i { width: 14px; height: 10px; border-radius: 2px; display: inline-block; border: 1px solid var(--border); }
