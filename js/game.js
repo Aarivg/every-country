@@ -9,9 +9,13 @@
     ["North America", "--na"], ["South America", "--sa"], ["Oceania", "--oc"],
   ];
   const CVAR = Object.fromEntries(CONT);
+  const STORE = "every-country-v1";
 
   // ---------- state ----------
   let S = { s: {} };
+  try { const raw = localStorage.getItem(STORE); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
+  const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
+  window.addEventListener("pagehide", save);
 
   // ---------- answer matching ----------
   const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
@@ -143,7 +147,7 @@
   }
   function setState(k, st) {
     S.s[k] = st;
-    paint(k);
+    save(); paint(k);
     close();
   }
   // float the card beside the country (phones get a bottom sheet instead)
