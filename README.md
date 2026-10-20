@@ -2,6 +2,8 @@
 
 A world geography quiz in the browser. Click any country on the map, type its name, and it fills in with its continent's color. Name all 197 to finish.
 
+**[Play the game](https://aarivg.github.io/every-country/)**
+
 ## How to play
 
 - **Click a country**, type its name, and press Enter.
