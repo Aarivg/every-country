@@ -44,6 +44,7 @@ html, body { height: 100%; }
 body { background: var(--panel); color: var(--ink); font-family: var(--f-body); font-size: 14px; }
 * { box-sizing: border-box; }
 button { font: inherit; color: inherit; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--eu); outline-offset: 2px; }
 
 .app { height: 100%; display: grid; grid-template-rows: auto 1fr; }
 header.bar {
@@ -163,3 +164,4 @@ aside.ledger { border-left: 1px solid var(--panel-line); overflow-y: auto; paddi
   .pop { position: fixed; left: 0 !important; right: 0; top: auto !important; bottom: 0; width: auto; max-width: none; border-radius: 14px 14px 0 0;
     padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 }
+@media (prefers-reduced-motion: reduce) { .c, .cont .fill { transition: none; } .shake { animation: none; } }
