@@ -26,13 +26,35 @@
   for (const k of KEYS) NAMES[k] = [...new Set([Q[k].n, ...Q[k].a].map(norm))];
   const exactOwner = {};
   for (const k of KEYS) for (const n of NAMES[k]) exactOwner[n] = exactOwner[n] || k;
+  // Damerau (optimal string alignment) distance: swaps of neighbouring letters count as one edit
+  function lev(a, b) {
+    const m = a.length, n = b.length; if (Math.abs(m - n) > 5) return 99;
+    const d = Array.from({ length: m + 1 }, (_, i) => [i]);
+    for (let j = 1; j <= n; j++) d[0][j] = j;
+    for (let i = 1; i <= m; i++) for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+    }
+    return d[m][n];
+  }
+  // How many mistakes a name of this length can absorb
+  const tolFor = len => len >= 14 ? 4 : len >= 9 ? 3 : len >= 6 ? 2 : len >= 4 ? 1 : 0;
+  const nearest = (g, k) => Math.min(...NAMES[k].map(t => {
+    const d = lev(g, t);
+    return d <= tolFor(t.length) ? d : 99;
+  }));
   function check(k, guess) {
     const g = norm(guess);
     if (!g) return { ok: false, empty: true };
     if (NAMES[k].includes(g)) return { ok: true };
     const other = exactOwner[g];
     if (other && other !== k) return { ok: false, other };
-    return { ok: false };
+    // Close enough to this country, and closer to it than to any other country's name
+    const mine = nearest(g, k);
+    if (mine === 99) return { ok: false };
+    for (const o of KEYS) if (o !== k && nearest(g, o) <= mine) return { ok: false };
+    return { ok: true, typo: true };
   }
 
   // ---------- map ----------
