@@ -16,7 +16,7 @@
   try { const raw = localStorage.getItem(STORE); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
   window.addEventListener("pagehide", save);
-  let running = false, tick0 = 0;
+  let running = false, paused = false, tick0 = 0;
 
   // ---------- answer matching ----------
   const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
@@ -156,12 +156,14 @@
   let selKey = null, hintN = 0;
   svg.on("click", e => {
     const k = e.target.dataset && e.target.dataset.k;
+    if (paused) return;
     if (k) open(k); else close();
   });
   function open(k) {
     const prev = selKey; selKey = k; hintN = 0;
     if (prev) paint(prev);
     paint(k);
+    if (paused) return;
     if (!running && !allDone()) startClock();
     render();
     pop.hidden = false;
@@ -267,9 +269,27 @@
     document.getElementById("sTime").textContent = fmt(S.t);
   }, 500);
 
+  // ---------- pause ----------
+  const pauseBtn = document.getElementById("pauseBtn"), pausedEl = document.getElementById("pausedEl");
+  function setPaused(p) {
+    if (p === paused) return;
+    if (p && allDone()) return;
+    paused = p;
+    if (p) { if (running) S.t = Date.now() - tick0; running = false; close(); hideTip(); save(); }
+    else if (S.t > 0 || Object.keys(S.s).length) startClock();
+    pausedEl.hidden = !p;
+    pauseBtn.innerHTML = p ? "▶ Resume" : "❚❚ Pause";
+    if (!p) document.getElementById("sTime").textContent = fmt(S.t);
+  }
+  pauseBtn.onclick = () => setPaused(!paused);
+  document.getElementById("resumeBtn").onclick = () => setPaused(false);
+  // stop the clock when the tab is hidden
+  document.addEventListener("visibilitychange", () => { if (document.hidden && running) setPaused(true); });
+
   // ---------- completion ----------
   function finish() {
     running = false; save();
+    pauseBtn.disabled = true;
     const box = document.getElementById("doneBox");
     const n = namedCount();
     box.hidden = false;
@@ -290,7 +310,7 @@
   function bindOpts() {
     const rb = document.getElementById("resetBtn"), gb = document.getElementById("giveBtn");
     if (rb) rb.onclick = () => confirmIn("resetSlot", "Clear all progress?", () => {
-      close(); S.s = {}; S.m = 0; S.t = 0; S.order = []; running = false; save();
+      close(); S.s = {}; S.m = 0; S.t = 0; S.order = []; running = false; setPaused(false); pauseBtn.disabled = false; save();
       KEYS.forEach(paint); updateStats(); rescale(); document.getElementById("doneBox").hidden = true;
       svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity);
     });

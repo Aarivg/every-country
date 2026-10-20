@@ -87,6 +87,15 @@ header.bar {
 
 .tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--card); font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 4px; white-space: nowrap; transform: translate(-50%, calc(-100% - 10px)); }
 
+.pausebtn { align-self: center; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--panel-line); background: var(--card); border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 600; }
+.pausebtn:hover { border-color: var(--muted); }
+.pausebtn:disabled { opacity: .45; cursor: default; }
+.paused { position: absolute; inset: 0; z-index: 8; display: grid; place-items: center; background: color-mix(in srgb, var(--sea) 70%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.paused div { text-align: center; display: grid; gap: 12px; justify-items: center; padding: 16px; }
+.paused strong { font-family: var(--f-display); font-weight: 800; font-size: 34px; letter-spacing: -0.01em; }
+.paused p { margin: 0; color: var(--muted); }
+.paused button { border: 0; background: var(--ink); color: var(--card); font-weight: 600; font-size: 15px; padding: 10px 22px; border-radius: 8px; }
+
 /* The naming card */
 .pop { position: absolute; width: 290px; max-width: calc(100% - 24px); background: var(--card); border: 1px solid var(--panel-line); border-radius: 10px; box-shadow: 0 12px 32px rgb(0 0 0 / .22); padding: 14px; display: grid; gap: 10px; z-index: 5; }
 .pop .eyebrow { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
