@@ -270,6 +270,26 @@
   const labelsBtn = document.getElementById("labelsBtn");
   function syncLabels() { labelsBtn.textContent = S.labels ? "Hide names on map" : "Show names on map"; rescale(); }
   labelsBtn.onclick = () => { S.labels = !S.labels; save(); syncLabels(); };
+  // confirmation happens inline, in place of the button that was pressed
+  function confirmIn(slotId, question, onYes) {
+    const slot = document.getElementById(slotId), orig = slot.innerHTML;
+    slot.innerHTML = `<div class="confirm"><span>${question}</span><button class="yes">Yes</button><button class="no">Cancel</button></div>`;
+    slot.querySelector(".yes").onclick = () => { slot.innerHTML = orig; bindOpts(); onYes(); };
+    slot.querySelector(".no").onclick = () => { slot.innerHTML = orig; bindOpts(); };
+  }
+  function bindOpts() {
+    const rb = document.getElementById("resetBtn"), gb = document.getElementById("giveBtn");
+    if (rb) rb.onclick = () => confirmIn("resetSlot", "Clear all progress?", () => {
+      close(); S.s = {}; S.m = 0; S.t = 0; S.order = []; running = false; save();
+      KEYS.forEach(paint); updateStats(); rescale();
+      svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity);
+    });
+    if (gb) gb.onclick = () => confirmIn("giveSlot", "Reveal every remaining country?", () => {
+      close(); KEYS.forEach(k => { if (!S.s[k]) { S.s[k] = "r"; S.order.push(k); } }); save();
+      KEYS.forEach(paint); updateStats(); rescale();
+    });
+  }
+  bindOpts();
 
   KEYS.forEach(paint); updateStats(); syncLabels();
 })();
