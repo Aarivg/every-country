@@ -64,6 +64,9 @@ header.bar {
 .c.q { fill: var(--land); cursor: pointer; }
 .c.q:hover { fill: var(--land-hover); }
 .c.t { fill: var(--terr); }
+.c.found, .mk.found { fill: var(--cf); }
+.c.found:hover { fill: var(--cf); filter: brightness(1.08); }
+.c.sel, .mk.sel { fill: var(--sel) !important; stroke: var(--ink); stroke-width: 1.6; }
 .mk { fill: var(--land); stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
 .mk:hover { stroke: var(--ink); }
 
@@ -72,6 +75,18 @@ header.bar {
 .zoomctl button + button { border-top: 1px solid var(--panel-line); }
 .zoomctl button:hover { background: var(--panel); }
 .hint-strip { position: absolute; left: calc(12px + env(safe-area-inset-left, 0px)); bottom: 12px; font-size: 12px; color: var(--muted); background: color-mix(in srgb, var(--card) 85%, transparent); padding: 6px 10px; border-radius: 6px; pointer-events: none; }
+
+/* The naming card */
+.pop { position: absolute; width: 290px; max-width: calc(100% - 24px); background: var(--card); border: 1px solid var(--panel-line); border-radius: 10px; box-shadow: 0 12px 32px rgb(0 0 0 / .22); padding: 14px; display: grid; gap: 10px; z-index: 5; }
+.pop .eyebrow { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.pop .close { border: 0; background: none; color: var(--muted); padding: 0 2px; font-size: 16px; line-height: 1; }
+.pop form { display: flex; gap: 6px; }
+.pop input { flex: 1; min-width: 0; font: 500 16px var(--f-body); padding: 9px 10px; border: 1.5px solid var(--panel-line); border-radius: 7px; background: var(--panel); color: var(--ink); }
+.pop input:focus { border-color: var(--ink); outline: none; }
+.pop .go { border: 0; border-radius: 7px; padding: 0 14px; font-weight: 600; background: var(--ink); color: var(--card); }
+.pop .fb { font-size: 13px; min-height: 18px; color: var(--muted); }
+.pop .fb.bad { color: var(--bad); }
+.pop .answer { font-family: var(--f-display); font-weight: 800; font-size: 22px; line-height: 1.15; }
 
 /* Ledger */
 aside.ledger { border-left: 1px solid var(--panel-line); overflow-y: auto; padding-block: 16px; padding-left: 16px; padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; align-content: start; min-width: 0; }

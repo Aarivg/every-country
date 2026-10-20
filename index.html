@@ -26,12 +26,14 @@
         <button id="zReset" aria-label="Reset view" style="font-size:14px">⤢</button>
       </div>
       <div class="hint-strip">Scroll to zoom · drag to pan · tiny countries are dots</div>
+      <div class="pop" id="pop" hidden role="dialog" aria-label="Name this country"></div>
     </div>
     <aside class="ledger">
       <section>
         <h2>Map key</h2>
         <div class="legend">
-          <div><i style="background:var(--land)"></i>Country in the quiz</div>
+          <div><i style="background:var(--land)"></i>Not named yet</div>
+          <div><i style="background:var(--eu)"></i>Named (colored by continent)</div>
           <div><i style="background:var(--terr)"></i>Territory, not in the quiz</div>
         </div>
       </section>
