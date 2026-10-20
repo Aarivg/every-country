@@ -12,10 +12,11 @@
   const STORE = "every-country-v1";
 
   // ---------- state ----------
-  let S = { s: {}, m: 0 };
+  let S = { s: {}, m: 0, t: 0 };
   try { const raw = localStorage.getItem(STORE); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
   window.addEventListener("pagehide", save);
+  let running = false, tick0 = 0;
 
   // ---------- answer matching ----------
   const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
@@ -143,6 +144,7 @@
     const prev = selKey; selKey = k; hintN = 0;
     if (prev) paint(prev);
     paint(k);
+    if (!running && !allDone()) startClock();
     render();
     pop.hidden = false;
     placePop();
@@ -217,11 +219,18 @@
   const namedCount = () => KEYS.filter(k => S.s[k] === "f").length;
   const revCount = () => KEYS.filter(k => S.s[k] === "r").length;
   const allDone = () => KEYS.every(k => S.s[k]);
+  const fmt = ms => { const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = s % 60; return (h ? h + ":" + String(m).padStart(2, "0") : m) + ":" + String(x).padStart(2, "0"); };
   function updateStats() {
     document.getElementById("sNamed").innerHTML = `${namedCount()}<small> / ${TOTAL}</small>`;
     document.getElementById("sRev").textContent = revCount();
     document.getElementById("sMiss").textContent = S.m;
   }
+  // ---------- timer ----------
+  function startClock() { running = true; tick0 = Date.now() - S.t; }
+  setInterval(() => {
+    if (running) { S.t = Date.now() - tick0; if (S.t % 5000 < 1000) save(); }
+    document.getElementById("sTime").textContent = fmt(S.t);
+  }, 500);
 
   KEYS.forEach(paint); updateStats();
 })();
