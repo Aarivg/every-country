@@ -1,0 +1,15 @@
+{
+  "name": "every-country",
+  "version": "1.0.0",
+  "description": "A world geography quiz: click any country on the map, then type its name.",
+  "private": true,
+  "scripts": {
+    "build-data": "node scripts/build-data.js",
+    "start": "npx --yes serve@14.2.4 ."
+  },
+  "devDependencies": {
+    "topojson-client": "3.1.0",
+    "world-atlas": "2.0.2"
+  },
+  "license": "MIT"
+}
