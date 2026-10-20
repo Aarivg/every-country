@@ -102,6 +102,8 @@ header.bar {
 .shake { animation: shake .32s ease; }
 @keyframes shake { 20%{transform:translateX(-6px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(2px)} }
 
+.toast { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: var(--good); color: #fff; font-weight: 600; padding: 7px 14px; border-radius: 999px; font-size: 13px; box-shadow: 0 4px 14px rgb(0 0 0 / .18); z-index: 6; white-space: nowrap; }
+
 /* Ledger */
 aside.ledger { border-left: 1px solid var(--panel-line); overflow-y: auto; padding-block: 16px; padding-left: 16px; padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; align-content: start; min-width: 0; }
 .ledger h2 { margin: 0 0 10px; font-family: var(--f-display); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }

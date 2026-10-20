@@ -195,6 +195,7 @@
   function setState(k, st) {
     S.s[k] = st;
     save(); paint(k); updateStats();
+    if (st === "f") toast(`${Q[k].n} · ${namedCount()} of ${TOTAL}`);
     close();
   }
   // float the card beside the country (phones get a bottom sheet instead)
@@ -214,6 +215,10 @@
     pop.style.left = px + "px"; pop.style.top = py + "px";
   }
   document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
+
+  // ---------- toast ----------
+  const toastEl = document.getElementById("toast"); let toastT;
+  function toast(msg) { toastEl.textContent = "✓ " + msg; toastEl.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => toastEl.hidden = true, 1600); }
 
   // ---------- stats ----------
   const namedCount = () => KEYS.filter(k => S.s[k] === "f").length;
