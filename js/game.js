@@ -19,6 +19,8 @@
 
   // ---------- answer matching ----------
   const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/&/g, " and ").replace(/\bsaint\b/g, "st").replace(/\bst\./g, "st")
+    .replace(/^\s*the\s+/, "")
     .replace(/[^a-z]/g, "");
   const NAMES = {};
   for (const k of KEYS) NAMES[k] = [...new Set([Q[k].n, ...Q[k].a].map(norm))];
