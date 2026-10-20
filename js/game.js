@@ -24,7 +24,7 @@
   const world = d3.select("#world");
   const wrap = document.getElementById("wrap");
   world.append("path").attr("class", "graticule").attr("d", path(d3.geoGraticule10()));
-  const gC = world.append("g");
+  const gC = world.append("g"), gM = world.append("g");
 
   const byKey = {}; // k -> {els:[], marker, anchor}
   for (const f of feats) {
@@ -32,7 +32,8 @@
     const el = gC.append("path").attr("d", path(f)).attr("class", "c " + (p.k ? "q" : "t")).node();
     if (p.k) {
       el.dataset.k = p.k;
-      (byKey[p.k] = byKey[p.k] || { els: [], polys: [] }).els.push(el);
+      (byKey[p.k] = byKey[p.k] || { els: [], areaKm: 0, polys: [] }).els.push(el);
+      byKey[p.k].areaKm += d3.geoArea(f) * 6371 * 6371;
       const g = f.geometry;
       const polys = g.type === "Polygon" ? [g.coordinates] : g.coordinates;
       for (const c of polys) byKey[p.k].polys.push({ type: "Polygon", coordinates: c });
@@ -44,6 +45,12 @@
     let best = null, ba = -1;
     for (const pg of o.polys) { const a = path.area(pg); if (a > ba) { ba = a; best = pg; } }
     o.anchor = path.centroid(best);
+    // tiny countries get a dot marker so they can be clicked
+    o.small = o.areaKm < 12000;
+    if (o.small) {
+      const c = gM.append("circle").attr("class", "mk").attr("cx", o.anchor[0]).attr("cy", o.anchor[1]).attr("r", 3).node();
+      c.dataset.k = k; o.marker = c;
+    }
   }
 
   // ---------- zoom ----------
@@ -55,6 +62,11 @@
   // keep dots, labels and hatching the same size on screen at every zoom level
   function rescale() {
     const u = pxPerUnit() * K;
+    const rr = 5 / u;
+    for (const k of KEYS) {
+      const o = byKey[k];
+      if (o.marker) o.marker.setAttribute("r", rr);
+    }
   }
   window.addEventListener("resize", () => { rescale(); });
   document.getElementById("zIn").onclick = () => svg.transition().duration(250).call(zoom.scaleBy, 1.8);

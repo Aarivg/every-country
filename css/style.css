@@ -64,6 +64,8 @@ header.bar {
 .c.q { fill: var(--land); cursor: pointer; }
 .c.q:hover { fill: var(--land-hover); }
 .c.t { fill: var(--terr); }
+.mk { fill: var(--land); stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
+.mk:hover { stroke: var(--ink); }
 
 .zoomctl { position: absolute; right: calc(12px + env(safe-area-inset-right, 0px)); bottom: 12px; display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--panel-line); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / .12); }
 .zoomctl button { width: 36px; height: 34px; border: 0; background: none; font-size: 18px; line-height: 1; }
