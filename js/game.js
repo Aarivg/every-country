@@ -105,7 +105,7 @@
   // ---------- zoom ----------
   let K = 1;
   const zoom = d3.zoom().scaleExtent([1, 80]).translateExtent([[-40, -40], [W + 40, H + 40]])
-    .on("zoom", e => { world.attr("transform", e.transform); K = e.transform.k; rescale(); placePop(); });
+    .on("zoom", e => { world.attr("transform", e.transform); K = e.transform.k; rescale(); placePop(); hideTip(); });
   svg.call(zoom).on("dblclick.zoom", null);
   const pxPerUnit = () => { const r = svg.node().getBoundingClientRect(); return Math.min(r.width / W, r.height / H) || 1; };
   // keep dots, labels and hatching the same size on screen at every zoom level
@@ -138,6 +138,18 @@
       if (st === "f") el.style.setProperty("--cf", `var(${CVAR[Q[k].c]})`);
     }
   }
+
+  // ---------- tooltip for named countries ----------
+  const tip = document.getElementById("tip");
+  function hideTip() { tip.hidden = true; }
+  svg.on("pointermove", e => {
+    const k = e.target.dataset && e.target.dataset.k;
+    if (k && S.s[k] && e.pointerType === "mouse") {
+      const r = wrap.getBoundingClientRect();
+      tip.textContent = Q[k].n; tip.hidden = false;
+      tip.style.left = (e.clientX - r.left) + "px"; tip.style.top = (e.clientY - r.top) + "px";
+    } else hideTip();
+  }).on("pointerleave", hideTip);
 
   // ---------- naming card ----------
   const pop = document.getElementById("pop");
