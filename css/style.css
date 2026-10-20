@@ -3,7 +3,7 @@
 body { margin: 0; -webkit-font-smoothing: antialiased; }
 [hidden] { display: none !important; }
 
-/* Layout: one-screen atlas — status strip on top, map as the working surface, ledger panel at right. */
+/* Layout: one-screen atlas — status strip on top, map as the working surface, ledger panel at right (stacks below on phones). */
 :root {
   --sea: #d4e1e8;
   --sea-line: #c3d3dc;
@@ -151,3 +151,15 @@ aside.ledger { border-left: 1px solid var(--panel-line); overflow-y: auto; paddi
 .legend i { width: 14px; height: 10px; border-radius: 2px; display: inline-block; border: 1px solid var(--border); }
 .done { background: var(--card); border: 1px solid var(--panel-line); border-radius: 10px; padding: 14px; }
 .done strong { font-family: var(--f-display); font-size: 20px; display: block; margin-bottom: 4px; }
+
+@media (max-width: 760px) {
+  .app { height: auto; min-height: 100%; }
+  .main { grid-template-columns: 1fr; }
+  .mapwrap { height: 62vh; min-height: 340px; }
+  aside.ledger { border-left: 0; border-top: 1px solid var(--panel-line); padding-left: max(16px, env(safe-area-inset-left, 0px)); }
+  .stats { gap: 16px; width: 100%; }
+  .stat b { font-size: 16px; }
+  .hint-strip { display: none; }
+  .pop { position: fixed; left: 0 !important; right: 0; top: auto !important; bottom: 0; width: auto; max-width: none; border-radius: 14px 14px 0 0;
+    padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+}

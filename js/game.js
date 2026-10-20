@@ -222,6 +222,7 @@
   // float the card beside the country (phones get a bottom sheet instead)
   function placePop() {
     if (!selKey || pop.hidden) return;
+    if (matchMedia("(max-width: 760px)").matches) return;
     const o = byKey[selKey];
     const t = d3.zoomTransform(svg.node());
     const [x, y] = t.apply(o.anchor);
