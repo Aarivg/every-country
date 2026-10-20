@@ -12,7 +12,7 @@
   const STORE = "every-country-v1";
 
   // ---------- state ----------
-  let S = { s: {} };
+  let S = { s: {}, m: 0 };
   try { const raw = localStorage.getItem(STORE); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
   window.addEventListener("pagehide", save);
@@ -158,13 +158,14 @@
     const r = check(k, inp.value);
     if (r.empty) { inp.focus(); return; }
     if (r.ok) { setState(k, "f"); return; }
+    S.m++; save(); updateStats();
     fb.className = "fb bad";
     fb.textContent = "Not quite. Try again.";
     inp.select();
   }
   function setState(k, st) {
     S.s[k] = st;
-    save(); paint(k);
+    save(); paint(k); updateStats();
     close();
   }
   // float the card beside the country (phones get a bottom sheet instead)
@@ -185,5 +186,15 @@
   }
   document.addEventListener("keydown", e => { if (e.key === "Escape") close(); });
 
-  KEYS.forEach(paint);
+  // ---------- stats ----------
+  const namedCount = () => KEYS.filter(k => S.s[k] === "f").length;
+  const revCount = () => KEYS.filter(k => S.s[k] === "r").length;
+  const allDone = () => KEYS.every(k => S.s[k]);
+  function updateStats() {
+    document.getElementById("sNamed").innerHTML = `${namedCount()}<small> / ${TOTAL}</small>`;
+    document.getElementById("sRev").textContent = revCount();
+    document.getElementById("sMiss").textContent = S.m;
+  }
+
+  KEYS.forEach(paint); updateStats();
 })();
