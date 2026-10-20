@@ -75,6 +75,8 @@ header.bar {
 .c.sel, .mk.sel { fill: var(--sel) !important; stroke: var(--ink); stroke-width: 1.6; }
 .mk { fill: var(--land); stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
 .mk:hover { stroke: var(--ink); }
+.spot .c.q:not(.found):not(.revealed):not(.sel) { fill: var(--spot); }
+.spot .mk:not(.found):not(.revealed):not(.sel) { fill: var(--spot); stroke: var(--ink); stroke-width: 1.4; }
 .hatch-bg { fill: var(--revealed); opacity: .35; }
 .hatch-ln { stroke: var(--revealed); stroke-width: 1.4; }
 .lbl { font-family: var(--f-body); font-weight: 600; fill: var(--ink); paint-order: stroke; stroke: var(--land); stroke-width: 3px; stroke-linejoin: round; text-anchor: middle; pointer-events: none; }
@@ -87,6 +89,13 @@ header.bar {
 
 .tip { position: absolute; pointer-events: none; background: var(--ink); color: var(--card); font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 4px; white-space: nowrap; transform: translate(-50%, calc(-100% - 10px)); }
 
+.maptools { position: absolute; top: 12px; left: calc(12px + env(safe-area-inset-left, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); display: flex; flex-wrap: wrap; gap: 8px; pointer-events: none; z-index: 4; }
+.maptools button { pointer-events: auto; display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--panel-line); background: var(--card); border-radius: 8px; padding: 7px 11px; font-size: 13px; font-weight: 500; box-shadow: 0 2px 8px rgb(0 0 0 / .10); }
+.maptools button:hover { border-color: var(--muted); }
+.maptools button[aria-pressed="true"] { background: var(--spot); border-color: var(--spot); color: #fff; }
+.maptools .sw { width: 10px; height: 10px; border-radius: 50%; background: var(--spot); display: inline-block; }
+.maptools button[aria-pressed="true"] .sw { background: #fff; }
+.maptools .n { font-family: var(--f-mono); font-size: 12px; opacity: .8; font-variant-numeric: tabular-nums; }
 .pausebtn { align-self: center; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--panel-line); background: var(--card); border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 600; }
 .pausebtn:hover { border-color: var(--muted); }
 .pausebtn:disabled { opacity: .45; cursor: default; }
@@ -114,7 +123,7 @@ header.bar {
 .shake { animation: shake .32s ease; }
 @keyframes shake { 20%{transform:translateX(-6px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(2px)} }
 
-.toast { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: var(--good); color: #fff; font-weight: 600; padding: 7px 14px; border-radius: 999px; font-size: 13px; box-shadow: 0 4px 14px rgb(0 0 0 / .18); z-index: 6; white-space: nowrap; }
+.toast { position: absolute; top: 58px; left: 50%; transform: translateX(-50%); background: var(--good); color: #fff; font-weight: 600; padding: 7px 14px; border-radius: 999px; font-size: 13px; box-shadow: 0 4px 14px rgb(0 0 0 / .18); z-index: 6; white-space: nowrap; }
 
 /* Ledger */
 aside.ledger { border-left: 1px solid var(--panel-line); overflow-y: auto; padding-block: 16px; padding-left: 16px; padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 22px; align-content: start; min-width: 0; }

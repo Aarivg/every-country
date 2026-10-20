@@ -33,6 +33,9 @@
         </defs>
         <g id="world"></g>
       </svg>
+      <div class="maptools">
+        <button id="spotBtn" type="button" aria-pressed="false"><i class="sw"></i>Show remaining <span class="n" id="leftN"></span></button>
+      </div>
       <div class="zoomctl">
         <button id="zIn" aria-label="Zoom in">+</button>
         <button id="zOut" aria-label="Zoom out">−</button>
@@ -60,6 +63,7 @@
           <div><i style="background:var(--land)"></i>Not named yet</div>
           <div><i style="background:var(--eu)"></i>Named (colored by continent)</div>
           <div><svg width="14" height="10" style="border:1px solid var(--border);border-radius:2px"><rect width="14" height="10" fill="url(#hatch)"></rect></svg>Revealed</div>
+          <div><i style="background:var(--spot)"></i>Still to name (with Show remaining on)</div>
           <div><i style="background:var(--terr)"></i>Territory, not in the quiz</div>
         </div>
       </section>

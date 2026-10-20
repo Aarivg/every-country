@@ -12,7 +12,7 @@
   const STORE = "every-country-v1";
 
   // ---------- state ----------
-  let S = { s: {}, m: 0, t: 0, order: [], labels: true };
+  let S = { s: {}, m: 0, t: 0, order: [], labels: true, spot: false };
   try { const raw = localStorage.getItem(STORE); if (raw) S = Object.assign(S, JSON.parse(raw)); } catch (e) {}
   const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) {} };
   window.addEventListener("pagehide", save);
@@ -112,7 +112,7 @@
   function rescale() {
     const u = pxPerUnit() * K;
     hatch.setAttribute("patternTransform", `rotate(45) scale(${1 / K})`);
-    const rr = 5 / u;
+    const rr = (S.spot ? 7 : 5) / u;
     for (const k of KEYS) {
       const o = byKey[k];
       if (o.marker) o.marker.setAttribute("r", rr);
@@ -249,6 +249,7 @@
   const contsEl = document.getElementById("conts");
   contsEl.innerHTML = CONT.map(([c, v]) => `<div class="cont" style="--cf:var(${v})"><span>${c}</span><b data-c="${c}"></b><div class="track"><div class="fill" data-cf="${c}"></div></div></div>`).join("");
   function updateStats() {
+    document.getElementById("leftN").textContent = remaining().length;
     document.getElementById("sNamed").innerHTML = `${namedCount()}<small> / ${TOTAL}</small>`;
     document.getElementById("sRev").textContent = revCount();
     document.getElementById("sMiss").textContent = S.m;
@@ -286,6 +287,15 @@
   // stop the clock when the tab is hidden
   document.addEventListener("visibilitychange", () => { if (document.hidden && running) setPaused(true); });
 
+  // ---------- finding remaining countries ----------
+  const spotBtn = document.getElementById("spotBtn");
+  function syncSpot() {
+    wrap.classList.toggle("spot", !!S.spot);
+    spotBtn.setAttribute("aria-pressed", S.spot ? "true" : "false");
+    rescale();
+  }
+  spotBtn.onclick = () => { S.spot = !S.spot; save(); syncSpot(); };
+  const remaining = () => KEYS.filter(k => !S.s[k]);
   // ---------- completion ----------
   function finish() {
     running = false; save();
@@ -321,6 +331,6 @@
   }
   bindOpts();
 
-  KEYS.forEach(paint); updateStats(); syncLabels();
+  KEYS.forEach(paint); updateStats(); syncLabels(); syncSpot();
   if (allDone()) finish();
 })();
