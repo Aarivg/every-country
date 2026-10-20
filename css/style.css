@@ -130,3 +130,5 @@ aside.ledger { border-left: 1px solid var(--panel-line); overflow-y: auto; paddi
 .legend { display: grid; gap: 6px; font-size: 12.5px; color: var(--muted); }
 .legend div { display: flex; align-items: center; gap: 8px; }
 .legend i { width: 14px; height: 10px; border-radius: 2px; display: inline-block; border: 1px solid var(--border); }
+.done { background: var(--card); border: 1px solid var(--panel-line); border-radius: 10px; padding: 14px; }
+.done strong { font-family: var(--f-display); font-size: 20px; display: block; margin-bottom: 4px; }

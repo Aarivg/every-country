@@ -215,6 +215,7 @@
     save(); paint(k); updateStats(); rescale();
     if (st === "f") toast(`${Q[k].n} · ${namedCount()} of ${TOTAL}`);
     close();
+    if (allDone()) finish();
   }
   // float the card beside the country (phones get a bottom sheet instead)
   function placePop() {
@@ -266,6 +267,15 @@
     document.getElementById("sTime").textContent = fmt(S.t);
   }, 500);
 
+  // ---------- completion ----------
+  function finish() {
+    running = false; save();
+    const box = document.getElementById("doneBox");
+    const n = namedCount();
+    box.hidden = false;
+    box.innerHTML = `<div class="done"><strong>${n === TOTAL ? "Every country named." : "Map complete."}</strong>You named ${n} of ${TOTAL} in ${fmt(S.t)} with ${S.m} wrong guess${S.m === 1 ? "" : "es"}${revCount() ? ` and ${revCount()} revealed` : ""}.</div>`;
+  }
+
   // ---------- options ----------
   const labelsBtn = document.getElementById("labelsBtn");
   function syncLabels() { labelsBtn.textContent = S.labels ? "Hide names on map" : "Show names on map"; rescale(); }
@@ -281,15 +291,16 @@
     const rb = document.getElementById("resetBtn"), gb = document.getElementById("giveBtn");
     if (rb) rb.onclick = () => confirmIn("resetSlot", "Clear all progress?", () => {
       close(); S.s = {}; S.m = 0; S.t = 0; S.order = []; running = false; save();
-      KEYS.forEach(paint); updateStats(); rescale();
+      KEYS.forEach(paint); updateStats(); rescale(); document.getElementById("doneBox").hidden = true;
       svg.transition().duration(350).call(zoom.transform, d3.zoomIdentity);
     });
     if (gb) gb.onclick = () => confirmIn("giveSlot", "Reveal every remaining country?", () => {
       close(); KEYS.forEach(k => { if (!S.s[k]) { S.s[k] = "r"; S.order.push(k); } }); save();
-      KEYS.forEach(paint); updateStats(); rescale();
+      KEYS.forEach(paint); updateStats(); rescale(); finish();
     });
   }
   bindOpts();
 
   KEYS.forEach(paint); updateStats(); syncLabels();
+  if (allDone()) finish();
 })();
