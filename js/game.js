@@ -42,6 +42,7 @@
   const world = d3.select("#world");
   const wrap = document.getElementById("wrap");
   world.append("path").attr("class", "graticule").attr("d", path(d3.geoGraticule10()));
+  const hatch = document.getElementById("hatch");
   const gC = world.append("g"), gM = world.append("g");
 
   const byKey = {}; // k -> {els:[], marker, anchor}
@@ -80,6 +81,7 @@
   // keep dots, labels and hatching the same size on screen at every zoom level
   function rescale() {
     const u = pxPerUnit() * K;
+    hatch.setAttribute("patternTransform", `rotate(45) scale(${1 / K})`);
     const rr = 5 / u;
     for (const k of KEYS) {
       const o = byKey[k];
@@ -98,6 +100,7 @@
     const all = o.marker ? [...o.els, o.marker] : o.els;
     for (const el of all) {
       el.classList.toggle("found", st === "f");
+      el.classList.toggle("revealed", st === "r");
       el.classList.toggle("sel", k === selKey);
       if (st === "f") el.style.setProperty("--cf", `var(${CVAR[Q[k].c]})`);
     }
@@ -136,16 +139,17 @@
     const k = selKey, q = Q[k], st = S.s[k];
     const cont = `<div class="eyebrow"><span>${st ? q.c : "Name this country"}</span><button class="close" aria-label="Close">✕</button></div>`;
     if (st) {
-      pop.innerHTML = cont + `<div class="answer">${q.n}</div><div class="fb">You named this one.</div>`;
+      pop.innerHTML = cont + `<div class="answer">${q.n}</div><div class="fb">${st === "f" ? "You named this one." : "Revealed. It won't count toward your score."}</div>`;
     } else {
       pop.innerHTML = cont + `
         <form autocomplete="off"><input id="guess" type="text" placeholder="Type the country name" spellcheck="false" autocapitalize="words" enterkeyhint="go"><button class="go" type="submit">Name</button></form>
         ${hintN ? `<div class="pattern">${pattern(q.n, hintN)}</div>` : ""}
         <div class="fb" id="fb"></div>
-        <div class="row"><button class="ghost" id="hintBtn" type="button">${hintN ? "Another letter" : "Hint"}</button></div>
+        <div class="row"><button class="ghost" id="hintBtn" type="button">${hintN ? "Another letter" : "Hint"}</button><button class="ghost" id="revBtn" type="button">Reveal answer</button></div>
         `;
       pop.querySelector("form").onsubmit = ev => { ev.preventDefault(); submit(); };
       pop.querySelector("#hintBtn").onclick = () => { const v = pop.querySelector("input").value; hintN = Math.min(hintN + 1, q.n.replace(/[^\p{L}]/gu, "").length); render(); const i = pop.querySelector("input"); i.value = v; i.focus(); };
+      pop.querySelector("#revBtn").onclick = () => { setState(k, "r"); };
     }
     pop.querySelector(".close").onclick = close;
   }

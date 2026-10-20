@@ -66,9 +66,12 @@ header.bar {
 .c.t { fill: var(--terr); }
 .c.found, .mk.found { fill: var(--cf); }
 .c.found:hover { fill: var(--cf); filter: brightness(1.08); }
+.c.revealed, .mk.revealed { fill: url(#hatch); }
 .c.sel, .mk.sel { fill: var(--sel) !important; stroke: var(--ink); stroke-width: 1.6; }
 .mk { fill: var(--land); stroke: var(--border); stroke-width: 1; vector-effect: non-scaling-stroke; cursor: pointer; }
 .mk:hover { stroke: var(--ink); }
+.hatch-bg { fill: var(--revealed); opacity: .35; }
+.hatch-ln { stroke: var(--revealed); stroke-width: 1.4; }
 
 .zoomctl { position: absolute; right: calc(12px + env(safe-area-inset-right, 0px)); bottom: 12px; display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--panel-line); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgb(0 0 0 / .12); }
 .zoomctl button { width: 36px; height: 34px; border: 0; background: none; font-size: 18px; line-height: 1; }

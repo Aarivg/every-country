@@ -18,6 +18,12 @@
   <div class="main">
     <div class="mapwrap" id="wrap">
       <svg id="map" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet" aria-label="World map">
+        <defs>
+          <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect class="hatch-bg" width="6" height="6"></rect>
+            <line class="hatch-ln" x1="0" y1="0" x2="0" y2="6"></line>
+          </pattern>
+        </defs>
         <g id="world"></g>
       </svg>
       <div class="zoomctl">
@@ -34,6 +40,7 @@
         <div class="legend">
           <div><i style="background:var(--land)"></i>Not named yet</div>
           <div><i style="background:var(--eu)"></i>Named (colored by continent)</div>
+          <div><svg width="14" height="10" style="border:1px solid var(--border);border-radius:2px"><rect width="14" height="10" fill="url(#hatch)"></rect></svg>Revealed</div>
           <div><i style="background:var(--terr)"></i>Territory, not in the quiz</div>
         </div>
       </section>
