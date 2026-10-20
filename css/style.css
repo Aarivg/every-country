@@ -92,6 +92,7 @@ header.bar {
 .maptools { position: absolute; top: 12px; left: calc(12px + env(safe-area-inset-left, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); display: flex; flex-wrap: wrap; gap: 8px; pointer-events: none; z-index: 4; }
 .maptools button { pointer-events: auto; display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--panel-line); background: var(--card); border-radius: 8px; padding: 7px 11px; font-size: 13px; font-weight: 500; box-shadow: 0 2px 8px rgb(0 0 0 / .10); }
 .maptools button:hover { border-color: var(--muted); }
+.maptools button:disabled { opacity: .45; cursor: default; }
 .maptools button[aria-pressed="true"] { background: var(--spot); border-color: var(--spot); color: #fff; }
 .maptools .sw { width: 10px; height: 10px; border-radius: 50%; background: var(--spot); display: inline-block; }
 .maptools button[aria-pressed="true"] .sw { background: #fff; }

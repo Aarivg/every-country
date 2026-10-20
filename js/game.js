@@ -250,6 +250,7 @@
   contsEl.innerHTML = CONT.map(([c, v]) => `<div class="cont" style="--cf:var(${v})"><span>${c}</span><b data-c="${c}"></b><div class="track"><div class="fill" data-cf="${c}"></div></div></div>`).join("");
   function updateStats() {
     document.getElementById("leftN").textContent = remaining().length;
+    document.getElementById("nextBtn").disabled = !remaining().length;
     document.getElementById("sNamed").innerHTML = `${namedCount()}<small> / ${TOTAL}</small>`;
     document.getElementById("sRev").textContent = revCount();
     document.getElementById("sMiss").textContent = S.m;
@@ -296,6 +297,33 @@
   }
   spotBtn.onclick = () => { S.spot = !S.spot; save(); syncSpot(); };
   const remaining = () => KEYS.filter(k => !S.s[k]);
+  let lastNext = null;
+  document.getElementById("nextBtn").onclick = () => {
+    if (paused) return;
+    const left = remaining();
+    if (!left.length) return;
+    // walk west-to-east by the country's anchor point, continuing from the last one visited
+    left.sort((a, b) => byKey[a].anchor[0] - byKey[b].anchor[0] || byKey[a].anchor[1] - byKey[b].anchor[1]);
+    let k = left[0];
+    if (lastNext && byKey[lastNext]) {
+      const x = byKey[lastNext].anchor[0];
+      k = left.find(c => c !== lastNext && byKey[c].anchor[0] >= x) || left.find(c => c !== lastNext) || left[0];
+    }
+    lastNext = k;
+    flyTo(k);
+  };
+  function flyTo(k) {
+    close();
+    const o = byKey[k];
+    let best = null, ba = -1;
+    for (const pg of o.polys) { const a = path.area(pg); if (a > ba) { ba = a; best = pg; } }
+    const [[x0, y0], [x1, y1]] = path.bounds(best);
+    const scale = Math.max(1, Math.min(o.small ? 14 : 40, 0.35 / Math.max((x1 - x0) / W, (y1 - y0) / H)));
+    const cx = o.anchor[0], cy = o.anchor[1];
+    const t = d3.zoomIdentity.translate(W / 2, H / 2).scale(scale).translate(-cx, -cy);
+    svg.transition().duration(650).call(zoom.transform, t).on("end", () => open(k));
+  }
+
   // ---------- completion ----------
   function finish() {
     running = false; save();
