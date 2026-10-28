@@ -20,6 +20,7 @@
       <div class="stat"><b id="sMiss">0</b><label>Wrong guesses</label></div>
       <div class="stat"><b id="sTime">0:00</b><label>Time</label></div>
       <button class="pausebtn" id="pauseBtn" type="button">❚❚ Pause</button>
+      <button class="pausebtn sharebtn" id="shareBtn" type="button">Share score</button>
     </div>
   </header>
   <div class="main">
@@ -45,6 +46,7 @@
       <div class="hint-strip">Scroll to zoom · drag to pan · tiny countries are dots</div>
       <div class="tip" id="tip" hidden></div>
       <div class="toast" id="toast" hidden></div>
+      <div class="sharebox" id="shareBox" hidden><p>Copy this and paste it anywhere:</p><textarea id="shareText" readonly rows="3"></textarea><button id="shareClose" type="button">Done</button></div>
       <div class="paused" id="pausedEl" hidden><div><strong>Paused</strong><p>The map is hidden while the clock is stopped.</p><button id="resumeBtn" type="button">Resume</button></div></div>
       <div class="pop" id="pop" hidden role="dialog" aria-label="Name this country"></div>
     </div>

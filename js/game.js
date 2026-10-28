@@ -332,8 +332,33 @@
     const box = document.getElementById("doneBox");
     const n = namedCount();
     box.hidden = false;
-    box.innerHTML = `<div class="done"><strong>${n === TOTAL ? "Every country named." : "Map complete."}</strong>You named ${n} of ${TOTAL} in ${fmt(S.t)} with ${S.m} wrong guess${S.m === 1 ? "" : "es"}${revCount() ? ` and ${revCount()} revealed` : ""}.</div>`;
+    box.innerHTML = `<div class="done"><strong>${n === TOTAL ? "Every country named." : "Map complete."}</strong>You named ${n} of ${TOTAL} in ${fmt(S.t)} with ${S.m} wrong guess${S.m === 1 ? "" : "es"}${revCount() ? ` and ${revCount()} revealed` : ""}.<button class="sharecta" type="button">Share your result</button></div>`;
+    box.querySelector(".sharecta").onclick = share;
   }
+
+  // ---------- sharing ----------
+  const SITE = "https://aarivg.github.io/every-country/";
+  function shareText() {
+    const n = namedCount();
+    if (!n) return `🌍 Every Country: can you name all ${TOTAL} countries on a blank world map?`;
+    if (n === TOTAL) return `🌍 Every Country: I named all ${TOTAL} countries in ${fmt(S.t)}. How fast can you do it?`;
+    if (allDone()) return `🌍 Every Country: I named ${n} of ${TOTAL} countries in ${fmt(S.t)}. How many can you get?`;
+    return `🌍 Every Country: I've named ${n} of ${TOTAL} countries so far (${fmt(S.t)}). How many can you get?`;
+  }
+  const shareBox = document.getElementById("shareBox"), shareTA = document.getElementById("shareText");
+  async function share() {
+    const text = shareText();
+    // phones and tablets get the system share sheet
+    if (navigator.share && matchMedia("(pointer: coarse)").matches) {
+      try { await navigator.share({ title: "Every Country", text, url: SITE }); return; }
+      catch (e) { if (e && e.name === "AbortError") return; }
+    }
+    const full = text + "\n" + SITE;
+    try { await navigator.clipboard.writeText(full); toast("Copied. Paste it anywhere"); }
+    catch (e) { shareTA.value = full; shareBox.hidden = false; shareTA.focus(); shareTA.select(); }
+  }
+  document.getElementById("shareBtn").onclick = share;
+  document.getElementById("shareClose").onclick = () => { shareBox.hidden = true; };
 
   // ---------- options ----------
   const labelsBtn = document.getElementById("labelsBtn");

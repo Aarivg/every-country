@@ -101,6 +101,13 @@ header.bar {
 .pausebtn { align-self: center; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--panel-line); background: var(--card); border-radius: 8px; padding: 7px 12px; font-size: 13px; font-weight: 600; }
 .pausebtn:hover { border-color: var(--muted); }
 .pausebtn:disabled { opacity: .45; cursor: default; }
+.sharebtn { background: var(--ink); color: var(--card); border-color: var(--ink); }
+.sharebtn:hover { border-color: var(--ink); filter: brightness(1.15); }
+.sharebox { position: absolute; top: 58px; left: 50%; transform: translateX(-50%); width: 340px; max-width: calc(100% - 24px); background: var(--card); border: 1px solid var(--panel-line); border-radius: 10px; box-shadow: 0 12px 32px rgb(0 0 0 / .22); padding: 12px; display: grid; gap: 8px; z-index: 9; }
+.sharebox p { margin: 0; font-size: 13px; color: var(--muted); }
+.sharebox textarea { width: 100%; resize: none; font: 13px/1.4 var(--f-body); padding: 8px; border: 1.5px solid var(--panel-line); border-radius: 7px; background: var(--panel); color: var(--ink); }
+.sharebox button { justify-self: end; border: 0; background: var(--ink); color: var(--card); font-weight: 600; padding: 7px 14px; border-radius: 7px; }
+.done .sharecta { display: block; width: 100%; margin-top: 12px; border: 0; background: var(--ink); color: var(--card); font-weight: 600; padding: 9px; border-radius: 7px; }
 .paused { position: absolute; inset: 0; z-index: 8; display: grid; place-items: center; background: color-mix(in srgb, var(--sea) 70%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .paused div { text-align: center; display: grid; gap: 12px; justify-items: center; padding: 16px; }
 .paused strong { font-family: var(--f-display); font-weight: 800; font-size: 34px; letter-spacing: -0.01em; }
